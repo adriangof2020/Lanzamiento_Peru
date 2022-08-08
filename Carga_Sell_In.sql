@@ -18,18 +18,18 @@ PRINT @Date;
 DELETE FROM  SELL_IN WHERE RIGHT(Fecha,7) = @Date;
   
 BULK INSERT SELL_IN
-FROM 'C:\Proyectos\Peru\SELL_IN.csv'
+FROM 'C:\Proyectos\Peru\BaseDatos\Lanzamiento_Peru\CargaBases\SELL_IN.csv'
 WITH (FIELDTERMINATOR=';', FIRSTROW=2, CODEPAGE='ACP')
 
-DELETE FROM SELL_IN WHERE PlanTon = 0 AND RealTon = 0 AND ProyPonderadaTon = 0 AND PlanDol = 0
-				          AND RealDol = 0 AND RealDol = 0 AND ProyPonderadaDol = 0;
+DELETE FROM SELL_IN WHERE PlanTon = 0 AND RealTon = 0 AND ProyPonderadaTon = 0 AND PlanSol = 0
+				          AND RealSol = 0  AND ProyPonderadaSol = 0;
 
 UPDATE SELL_IN SET PlanTon = 0 WHERE  PlanTon IS NULL; 
 UPDATE SELL_IN SET RealTon = 0 WHERE  RealTon IS NULL; 
 UPDATE SELL_IN SET ProyPonderadaTon = 0 WHERE  ProyPonderadaTon IS NULL; 
-UPDATE SELL_IN SET PlanDol = 0 WHERE  PlanDol IS NULL; 
-UPDATE SELL_IN SET RealDol = 0 WHERE  RealDol IS NULL; 
-UPDATE SELL_IN SET ProyPonderadaDol = 0 WHERE  ProyPonderadaDol IS NULL; 
+UPDATE SELL_IN SET PlanSol = 0 WHERE  PlanSol IS NULL; 
+UPDATE SELL_IN SET RealSol = 0 WHERE  RealSol IS NULL; 
+UPDATE SELL_IN SET ProyPonderadaSol = 0 WHERE  ProyPonderadaSol IS NULL; 
 
 UPDATE SELL_IN SET CodCategoria = TRIM(CodCategoria);
 UPDATE SELL_IN SET Categoria = TRIM(Categoria);
@@ -54,7 +54,7 @@ IF OBJECT_ID(N'tempdb..#SELL_IN_STAGING') IS NOT NULL DROP TABLE #SELL_IN_STAGIN
 SELECT A.Fecha, CONCAT(A.CodCategoria, ' - ', A.Categoria) Categoria, CONCAT(A.CodMarca, ' - ', A.Marca) Marca, CONCAT(A.CodFamilia, ' - ', A.Familia) Familia, CONCAT(A.CodAlicorp, ' - ', A.Material) Material,
 	   CONCAT(A.CodGrupoPrecios, ' - ', A.GrupoPrecios) GrupoPrecios, CONCAT(A.CodOficinaVentas, ' - ', A.OficinaVentas) OficinaVentas, CONCAT(A.CodGrupoCondiciones, ' - ', A.GrupoCondiciones) GrupoCondiciones,
 	   CONCAT(A.CodClienteActual, ' - ', A.ClienteActual) ClienteActual,
-	   SUM(PlanTon) PlanTon, SUM(RealTon) RealTon, SUM(ProyPonderadaTon) ProyPonderadaTon, SUM(PlanDol) PlanDol, SUM(RealDol) RealDol, SUM(ProyPonderadaDol) ProyPonderadaDol
+	   SUM(A.PlanTon) PlanTon, SUM(A.RealTon) RealTon, SUM(A.ProyPonderadaTon) ProyPonderadaTon, SUM(A.PlanSol) PlanSol, SUM(A.RealSol) RealSol, SUM(A.ProyPonderadaSol) ProyPonderadaSol
 INTO #SELL_IN_STAGING
 FROM SELL_IN A
 WHERE RIGHT(Fecha,7) = @Date
