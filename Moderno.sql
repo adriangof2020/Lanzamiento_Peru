@@ -8,7 +8,7 @@ PRINT @Date;
 DELETE FROM  MODERNO WHERE RIGHT(Fecha,7) = @Date;
 
 BULK INSERT MODERNO
-FROM 'C:\Proyectos\Peru\BaseDatos\Lanzamiento_Peru\CargaBases\MODERNO.csv'
+FROM 'C:\Proyectos\Peru\BaseDatos\Lanzamiento_Peru\CargaBases\enefeb.csv'
 WITH (FIELDTERMINATOR=';', FIRSTROW=2, CODEPAGE='ACP');
 
 UPDATE MODERNO SET Importe = REPLACE(Importe, ',', '')
@@ -42,6 +42,29 @@ UPDATE MODERNO SET Importe = '0' WHERE  Importe IS NULL;
 UPDATE MODERNO SET RealTon = 0 WHERE  RealTon IS NULL; 
 
 DELETE FROM MODERNO  WHERE RealTon = 0 and Importe = '0';
+
+
+BULK INSERT PLAN_MODERNO
+FROM 'C:\Proyectos\Peru\BaseDatos\Lanzamiento_Peru\CargaBases\PlanModerno.csv'
+WITH (FIELDTERMINATOR=';', FIRSTROW=2, CODEPAGE='ACP');
+
+DELETE FROM PLAN_MODERNO WHERE PlanTon = 0 AND PlanSol = 0
+
+UPDATE PLAN_MODERNO SET PlanTon = 0 WHERE  PlanTon IS NULL; 
+UPDATE PLAN_MODERNO SET PlanSol = 0 WHERE  PlanSol IS NULL; 
+
+
+UPDATE PLAN_MODERNO SET CodCategoria = TRIM(CodCategoria);
+UPDATE PLAN_MODERNO SET Categoria = TRIM(Categoria);
+UPDATE PLAN_MODERNO SET CodFamilia = TRIM(CodFamilia);
+UPDATE PLAN_MODERNO SET Familia = TRIM(Familia);
+UPDATE PLAN_MODERNO SET CodAlicorp = TRIM(CodAlicorp);
+UPDATE PLAN_MODERNO SET Material = TRIM(Material);
+UPDATE PLAN_MODERNO SET CodCliente = TRIM(CodCliente);
+UPDATE PLAN_MODERNO SET Cliente = TRIM(Cliente);
+
+
+
 
 IF OBJECT_ID(N'tempdb..#MODERNO_STAGING') IS NOT NULL DROP TABLE #MODERNO_STAGING;
 
