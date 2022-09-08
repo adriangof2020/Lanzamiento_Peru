@@ -1,4 +1,5 @@
 USE Lanzamientos;
+SET LANGUAGE US_ENGLISH;
 
 TRUNCATE TABLE MaestroTerritorio -- LLave CodDistribuidor-CodTerritorio para asignar Of.Ventas, Grp Precios, Grp Vendedores, etc.
 
@@ -31,6 +32,9 @@ DELETE FROM BaseInicialSellOut
 WHERE Negocio not in ('Core','Value');
 
 
+----------------------------------------------------------------------------------------------------------------
+-------------------------------INGRESANDO LA BASE SPLIT TONELADAS-----------------------------------
+----------------------------------------------------------------------------------------------------------------
 TRUNCATE TABLE BaseSplit;
 
 BULK INSERT BaseSplit
@@ -191,7 +195,7 @@ CONCAT(A.CodDistribuidor, ' - ', A.Distribuidor) Distribuidor
 --,IIF(YEAR(A.fecha)=YEAR(@DiaCierre) AND MONTH(A.fecha)=MONTH(@DiaCierre),(-(A.VentaTonSO)/@DiasFaltantes) - (A.VentaTonSO)*F.FactorDiasHab, NULL)		PorIncrementarTon
 --,IIF(YEAR(A.fecha)=YEAR(@DiaCierre) AND MONTH(A.fecha)=MONTH(@DiaCierre),0,NULL)											
 ,0 PlanSoles
-,A.VentaSolesSO																																																												RealSoles
+,A.VentaSolesSO/1000 RealSoles
 --,IIF(DAY(A.Fecha)<=DAY(@DiaCierre),A.VentaSolesSO,NULL)																																										CorteSoles
 --,IIF(YEAR(A.fecha)=YEAR(@DiaCierre) AND MONTH(A.fecha)=MONTH(@DiaCierre),A.VentaSolesSO,NULL)																								Soles	
 --,IIF(YEAR(A.fecha)=YEAR(@DiaMA) AND MONTH(A.fecha)=MONTH(@DiaMA),A.VentaSolesSO,NULL)																										SolesMA
@@ -314,6 +318,8 @@ DELETE BaseSOFinal WHERE Distribuidor LIKE '1000003899%'; ---CORREGIR EN EL PLAN
 -------------------------------------------
 
 
+
+
 --UPDATE BaseSOFinal
 --SET	PlanAux = BF.PlanTon*ST.SolTon
 --	FROM BaseSOFinal BF,
@@ -335,3 +341,8 @@ DELETE BaseSOFinal WHERE Distribuidor LIKE '1000003899%'; ---CORREGIR EN EL PLAN
 --																		GROUP BY Distribuidor, Material  
 --																		HAVING   ABS( COALESCE(SUM(Ton)/NULLIF(SUM(PlanTon),0),0) - COALESCE(SUM(Soles)/NULLIF(SUM(PlanAux),0),0)) < ABS( COALESCE(SUM(Ton)/NULLIF(SUM(PlanTon),0),0) - COALESCE(SUM(Soles)/NULLIF(SUM(PlanSoles),0),0)) )
 
+--select * from BaseSOFinal where territorio is null
+
+--      ,
+--      ,
+--      ,
