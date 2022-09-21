@@ -1,0 +1,4 @@
+TRUNCATE TABLE BASE_FINAL_SELL_OUT;
+
+EXEC sp_CargaVentasSellOut 
+@mes ='09.2022';
